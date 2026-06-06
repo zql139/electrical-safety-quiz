@@ -1,207 +1,192 @@
-# Linux 和 Git 使用笔记
+# Linux 和 Git 笔记
 
-## 一、Linux 命令基础
+## 一、Linux命令行操作
 
-### 1. 文件管理
+### 1. 编译命令
 
 ```bash
-# 查看当前目录
-pwd
+# 编译C程序
+gcc -I include src/main.c src/quiz_data.c src/quiz_utils.c -o bin/quiz.exe
 
-# 列出文件
-ls -la
+# 运行程序
+./bin/quiz.exe
 
-# 创建目录
-mkdir -p src include output notebooks
-
-# 删除文件/目录
-rm file.txt
-rm -rf dirname
-
-# 复制文件
-cp source.txt dest.txt
-cp -r sourcedir destdir
-
-# 移动文件
-mv oldname.txt newname.txt
-
-# 创建空文件
-touch README.md
+# 将输出重定向到文件
+./bin/quiz.exe > output/run_result.txt
 ```
 
-### 2. 编译命令
+### 2. run.sh 脚本说明
 
 ```bash
-# 编译单个文件
-gcc main.c -o main
+#!/bin/bash
 
-# 编译多个文件
+# 创建输出目录
+mkdir -p bin output
+
+# 编译程序
+echo "正在编译..."
 gcc -I include src/main.c src/quiz_data.c src/quiz_utils.c -o bin/quiz
 
-# 编译并生成调试信息
-gcc -g -I include src/*.c -o bin/quiz
-
-# 使用makefile
-make
-make clean
+# 检查编译是否成功
+if [ $? -eq 0 ]; then
+    echo "编译成功！"
+    echo "正在运行测试..."
+    
+    # 运行程序并保存输出
+    ./bin/quiz > output/run_result.txt
+    
+    echo "测试完成！结果已保存到 output/run_result.txt"
+else
+    echo "编译失败！"
+    exit 1
+fi
 ```
 
-### 3. 运行程序
+### 3. 脚本使用方法
 
 ```bash
-# 运行可执行文件
-./bin/quiz
+# 赋予执行权限
+chmod +x run.sh
 
-# 后台运行
-./bin/quiz &
+# 运行脚本
+./run.sh
 
-# 重定向输出到文件
-./bin/quiz > output.txt
-./bin/quiz > output.txt 2>&1
-
-# 管道命令
-echo "1" | ./bin/quiz
+# 查看运行结果
+cat output/run_result.txt
 ```
 
-## 二、Git 版本控制
+---
 
-### 1. 初始化仓库
+## 二、Git 操作指南
+
+### 1. 仓库初始化
 
 ```bash
-# 创建新仓库
-mkdir quiz-project
-cd quiz-project
+# 初始化本地仓库
 git init
 
 # 配置用户信息
-git config user.name "Your Name"
-git config user.email "your.email@example.com"
-
-# 添加远程仓库
-git remote add origin https://github.com/yourusername/quiz-project.git
+git config user.name "zql139"
+git config user.email "3362431677@qq.com"
 ```
 
 ### 2. 基本操作
 
 ```bash
+# 添加文件到暂存区
+git add .
+
+# 提交到本地仓库
+git commit -m "commit message"
+
 # 查看状态
 git status
 
-# 添加文件
-git add .
-git add src/main.c
-
-# 提交
-git commit -m "feat: 初始化项目结构"
-
-# 查看日志
-git log
+# 查看提交历史
 git log --oneline
-
-# 推送到远程
-git push origin main
 ```
 
 ### 3. 分支管理
 
 ```bash
 # 创建分支
-git branch dev
+git checkout -b dev
 
 # 切换分支
-git checkout dev
-
-# 创建并切换
-git checkout -b feature/new-feature
-
-# 查看分支
-git branch -a
+git checkout main
 
 # 合并分支
-git checkout main
-git merge dev
+git merge dev --no-ff -m "merge: dev分支合并"
 
 # 删除分支
-git branch -d feature/new-feature
+git branch -d dev
 ```
 
-### 4. 工作流示例
+### 4. 远程仓库操作
 
 ```bash
-# 日常开发流程
-git checkout dev
-git pull origin dev
-
-# 创建特性分支
-git checkout -b feature/add-explanation
-
-# 修改代码...
-git add .
-git commit -m "feat: 添加答错解释功能"
+# 添加远程仓库
+git remote add origin https://github.com/zql139/electrical-safety-quiz.git
 
 # 推送到远程
-git push origin feature/add-explanation
+git push -u origin main
 
-# 创建Pull Request后合并
-git checkout dev
-git merge feature/add-explanation
-git push origin dev
+# 拉取远程代码
+git pull origin main
 ```
 
-## 三、项目操作记录
+### 5. 本次项目提交记录
 
-### Commit 记录
+```
+06f3d23 docs: 更新Issue和PR记录
+1626892 merge: 解决冲突，使用远程版本  
+ae33aca merge: dev分支合并到main
+b55a662 docs: 添加Linux和Git笔记
+e3db66a test: 添加运行结果文件
+4978b86 docs: 添加开发进度记录
+07c21b0 feat: 初始化电气安全答题项目 v2.0
+```
 
-| 序号 | 时间 | 提交信息 | 分支 |
-|------|------|---------|------|
-| 1 | 2026-06-06 | feat: 初始化项目结构 | main |
-| 2 | 2026-06-06 | feat: 添加题库数据模块 | dev |
-| 3 | 2026-06-06 | feat: 添加工具函数模块 | dev |
-| 4 | 2026-06-06 | feat: 实现主程序逻辑 | dev |
-| 5 | 2026-06-06 | feat: 添加答错解释功能 | dev |
+---
 
-### 分支合并记录
+## 三、GitHub 仓库信息
 
+### 仓库地址
+- **GitHub**: https://github.com/zql139/electrical-safety-quiz
+
+### 分支结构
+```
+main          # 主分支，稳定版本
+└── dev       # 开发分支，功能开发
+```
+
+### Issue 记录
+- **Issue #1**: 添加更多题目类型支持（待处理）
+
+### Pull Request
+- **PR #1**: dev分支合并到main（已完成）
+
+---
+
+## 四、常见问题解决
+
+### 问题1：Git 推送失败
+
+**错误信息**：
+```
+error: failed to push some refs to 'https://github.com/xxx/xxx.git'
+```
+
+**解决方法**：
 ```bash
-# dev -> main 合并
-git checkout main
-git merge dev --no-ff
+git pull origin main --allow-unrelated-histories
+# 解决冲突后重新提交
+git add .
+git commit -m "merge: 解决冲突"
 git push origin main
 ```
 
-## 四、常见问题
+### 问题2：编译错误
 
-### 问题1：编译错误
-
-```bash
-# 错误：找不到头文件
-# 解决：使用 -I 指定包含目录
-gcc -I include src/main.c -o main
+**错误信息**：
+```
+fatal error: quiz.h: No such file or directory
 ```
 
-### 问题2：权限问题
-
+**解决方法**：
 ```bash
-# 错误：Permission denied
-# 解决：添加执行权限
+# 使用 -I 参数指定头文件目录
+gcc -I include src/main.c src/quiz_data.c src/quiz_utils.c -o bin/quiz
+```
+
+### 问题3：脚本无法执行
+
+**错误信息**：
+```
+bash: ./run.sh: Permission denied
+```
+
+**解决方法**：
+```bash
 chmod +x run.sh
-```
-
-### 问题3：中文乱码
-
-```bash
-# 在Linux下设置UTF-8编码
-export LANG=zh_CN.UTF-8
-export LC_ALL=zh_CN.UTF-8
-```
-
-### 问题4：Git冲突
-
-```bash
-# 查看冲突文件
-git status
-
-# 手动解决冲突后
-git add .
-git commit -m "fix: 解决合并冲突"
 ```
