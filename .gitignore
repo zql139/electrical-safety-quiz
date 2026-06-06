@@ -1,0 +1,24 @@
+# 忽略编译输出
+bin/
+*.exe
+*.o
+*.obj
+
+# 忽略旧文件（根目录下的）
+/main.c
+/main.exe
+/output.txt
+/self_check.md
+/电气安全答题.html
+
+# 忽略ZIP包
+*.zip
+
+# 忽略Python虚拟环境
+.venv/
+__pycache__/
+*.pyc
+
+# 忽略IDE配置
+.vscode/
+.idea/
